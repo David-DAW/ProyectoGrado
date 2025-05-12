@@ -10,9 +10,8 @@ const Footer = () => {
           <Image src={logo} alt="Logo de la aplicación" height={100}  />
         </div>
 
-        <p className="mx-auto mt-6 max-w-md text-center leading-relaxed text-amber-500 dark:text-amber-500">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt
-          consequuntur amet culpa cum itaque neque.
+        <p className="mx-auto mt-6 max-w-xl text-center leading-relaxed text-amber-500 dark:text-amber-500">
+        Comparte tus peliculas favoritas, encuentra reseñas únicas y escribe sobre tus nuevos descubrimientos del mundo cinematográfico.
         </p>
 
         <ul className="mt-12 flex flex-wrap justify-center gap-6 md:gap-8 lg:gap-12">

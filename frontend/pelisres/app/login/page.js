@@ -17,7 +17,7 @@ export default function Login() {
     console.log("Formulario enviado");
 
     try {
-      const response = await fetch("http://localhost:8080/auth/login", {
+      const response = await fetch("http://172.22.229.1:8080/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

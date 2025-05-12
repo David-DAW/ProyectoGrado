@@ -25,13 +25,7 @@ const Hero = () => {
               href="/login"
               className="mb-3 inline-flex h-12 w-full items-center justify-center rounded bg-yellow-500 px-6 font-medium tracking-wide text-white shadow-md transition duration-200 hover:bg-amber-500 focus:outline-none md:mr-4 md:mb-0 md:w-auto"
             >
-              Iniciar Sesión
-            </Link>
-            <Link
-              href="/"
-              className="inline-flex items-center font-semibold text-gray-50 underline-offset-2 transition-colors duration-200 hover:underline"
-            >
-              Sobre nosotros
+              Busca ya la próxima pelicula que verás
             </Link>
           </div>
         </div>
