@@ -22,7 +22,7 @@ const Movies = () => {
       </h2>
       <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
         {movies.map((movie) => (
-          <div key={movie.id} className="bg-gray-800 p-4 rounded shadow-lg">
+          <div key={movie.id} className="bg-gray-900 p-4 rounded shadow-lg">
             <Link href={`/movies/${movie.id}`} key={movie.id}>
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}

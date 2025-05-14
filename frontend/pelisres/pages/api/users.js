@@ -1,13 +1,13 @@
-import getConnection from '../../lib/db'; // Importa la función que maneja el pool
+import getConnection from '../../lib/db'; 
 
 export default async function handler(req, res) {
-  console.log('Handler llamado'); // Al inicio de la función
+  console.log('Handler llamado'); 
 
   if (req.method === 'GET') {
     let connection;
     try {
       console.log('Intentando obtener conexión desde el pool');
-      connection = await getConnection(); // Obtiene la conexión desde el pool
+      connection = await getConnection(); 
       console.log('Conexión obtenida', connection.threadId);
 
       if (!connection) {
@@ -24,7 +24,6 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Error al conectar o consultar la base de datos' });
     } finally {
       console.log('Bloque finally');
-      // No es necesario cerrar la conexión aquí porque el pool maneja automáticamente las conexiones
     }
   } else {
     console.log('Método no permitido');

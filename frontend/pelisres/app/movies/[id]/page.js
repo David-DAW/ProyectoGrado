@@ -2,7 +2,7 @@ import Header from "@/app/sections/Header/HeaderComponent";
 import Footer from "@/app/sections/Footer/FooterComponent";
 import { getMovieDetails, getSimilarMovies } from "../../services/api";
 import Link from "next/link";
-import FormReview from "@/app/sections/components/FormReview/FormReview";
+import FormReview from "@/app/components/FormReview/FormReview";
 
 export default async function MoviePage({ params }) {
   const { id } = params;
@@ -28,7 +28,7 @@ export default async function MoviePage({ params }) {
               />
             </div>
 
-            <div className="w-3/4 rounded-lg overflow-hidden flex flex-col bg-gray-800 shadow-lg h-[23em]">
+            <div className="w-3/4 rounded-lg overflow-hidden flex flex-col bg-gray-900 shadow-lg h-[23em]">
               <div className="p-6 flex-1 flex flex-col justify-start overflow-auto text-gray-200">
                 <h2 className="text-2xl font-bold mb-4">
                   {movie.title} ({year})
@@ -59,7 +59,7 @@ export default async function MoviePage({ params }) {
               </div>
             </div>
           </div>
-        <FormReview />
+        <FormReview movie={movie}/>
         </div>
       </div>
 

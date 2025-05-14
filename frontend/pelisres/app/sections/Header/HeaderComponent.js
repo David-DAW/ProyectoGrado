@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "../../../public/images/prueba4.png";
-import Dropdown from "../components/Dropdown/DropdownComponent";
+import Dropdown from "../../components/Dropdown/DropdownComponent";
 import { Menu, X } from "lucide-react";
-import FormSearch from "../components/FormSearch/FormSearch";
+import FormSearch from "../../components/FormSearch/FormSearch";
 
 const Header = () => {
   const [token, setToken] = useState(null);

@@ -1,6 +1,10 @@
 package com.pelisres.review;
+
+import com.pelisres.movie.Movie;
 import com.pelisres.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,13 +21,16 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "id_pelicula", nullable = false)
-    private String peliculaId;
+    @ManyToOne
+    @JoinColumn(name = "id_pelicula", referencedColumnName = "id_pelicula", nullable = false)
+    private Movie movie;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String texto;
 
     @Column(nullable = false)
+    @Min(1)
+    @Max(10)
     private int valoracion;
 
     @Column(nullable = false)
@@ -33,4 +40,3 @@ public class Review {
     @JoinColumn(name = "id_usuario", nullable = false)
     private User user;
 }
-
