@@ -6,7 +6,7 @@ import com.pelisres.movie.Movie;
 import com.pelisres.movie.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; // Importa @Transactional
+import org.springframework.transaction.annotation.Transactional; 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,10 +20,27 @@ public class ReviewService {
     private final MovieRepository movieRepository;
 
 
-        public List<ReviewResponse> getAllReviews() {
+    public List<ReviewResponse> getAllReviews() {
         return reviewRepository.findAll().stream()
             .map(ReviewResponse::new)
             .collect(Collectors.toList());
+    }
+
+    public List<ReviewResponse> getReviewsByUser(String userEmail) {
+    User user = userRepository.findByEmail(userEmail)
+        .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+    return reviewRepository.findByUser(user).stream()
+        .map(ReviewResponse::new)
+        .collect(Collectors.toList());
+}
+    public List<ReviewResponse> getReviewsByMovie(String idPelicula) {
+        Movie movie = movieRepository.findByIdPelicula(idPelicula)
+                .orElseThrow(() -> new RuntimeException("Película no encontrada"));
+
+        return reviewRepository.findByMovie(movie).stream()
+                .map(ReviewResponse::new)
+                .collect(Collectors.toList());
     }
 
 

@@ -3,11 +3,16 @@ import Footer from "@/app/sections/Footer/FooterComponent";
 import { getMovieDetails, getSimilarMovies } from "../../services/api";
 import Link from "next/link";
 import FormReview from "@/app/components/FormReview/FormReview";
+import MovieReviews from "@/app/components/MovieReview/MovieReview";
 
 export default async function MoviePage({ params }) {
   const { id } = params;
   const movie = await getMovieDetails(id);
   const similarMovies = await getSimilarMovies(id);
+
+  const reviewsResponse = await fetch(`http://172.22.229.1:8080/reviews?movieId=${id}`);
+  const reviews = await reviewsResponse.json();
+
   console.log("similarMovies:", similarMovies);
 
   const year = new Date(movie.release_date).getFullYear();
@@ -48,7 +53,7 @@ export default async function MoviePage({ params }) {
                 </p>
 
                 <p className="text-sm text-gray-400 mb-1">
-                  <span className="font-semibold">Sinopsis:</span> 
+                  <span className="font-semibold">Sinopsis:</span>
                 </p>
 
                 <p className="leading-relaxed text-justify text-md">{movie.overview}</p>
@@ -59,7 +64,11 @@ export default async function MoviePage({ params }) {
               </div>
             </div>
           </div>
-        <FormReview movie={movie}/>
+
+          <FormReview movie={movie} />
+
+          {/* <MovieReviews reviews={reviews} /> */}
+
         </div>
       </div>
 

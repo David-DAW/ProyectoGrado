@@ -11,7 +11,7 @@ const Reviews = () => {
         const response = await fetch("http://172.22.229.1:8080/reviews");
         if (response.ok) {
           const data = await response.json();
-          setReviews(data);
+          setReviews(data.slice(0, 9));
         } else {
           console.error("Error al cargar reseñas");
         }

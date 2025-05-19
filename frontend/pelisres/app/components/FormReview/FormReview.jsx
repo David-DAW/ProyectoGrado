@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
 
 const FormReview = ({ movie }) => {
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [movieReviews, setMovieReviews] = useState([]);
 
   const etiquetas = [
     "Horrible", "Muy mala", "Mala", "Regular", "Aceptable",
@@ -18,7 +19,7 @@ const FormReview = ({ movie }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) return alert("Usuario no autenticado.");
 
     const reviewData = {
@@ -27,7 +28,7 @@ const FormReview = ({ movie }) => {
       id_pelicula: movie.id,
       imagen_url: movie.poster_path,
       descripcion_pelicula: movie.overview,
-      titulo: movie.title
+      titulo: movie.title,
     };
 
     try {
@@ -35,13 +36,16 @@ const FormReview = ({ movie }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(reviewData),
       });
 
       if (res.ok) {
         setSubmitted(true);
+        setReviewText("");
+        setRating(0);
+        fetchMovieReviews();
       } else {
         alert("Error al publicar la reseña.");
       }
@@ -51,10 +55,25 @@ const FormReview = ({ movie }) => {
     }
   };
 
+  const fetchMovieReviews = async () => {
+    try {
+      const res = await fetch(`http://172.22.229.1:8080/reviews/movie/${movie.id}`);
+      if (!res.ok) throw new Error("No se pudieron cargar las reseñas");
+      const data = await res.json();
+      console.log("Reseñas recibidas:", data);
+      setMovieReviews(data);
+    } catch (error) {
+      console.error("Error al obtener reseñas de la película:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (movie?.id) fetchMovieReviews();
+  }, [movie?.id]);
+
   return (
     <div className="w-full mt-6 lg:pl-9">
       <div className="p-6 bg-gray-900 rounded-2xl shadow-xl space-y-6">
-        {/* Título y Póster */}
         <div className="flex items-center space-x-4">
           <img
             src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
@@ -66,7 +85,6 @@ const FormReview = ({ movie }) => {
 
         {!submitted ? (
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Reseña */}
             <div>
               <label htmlFor="review" className="block mb-2 text-sm font-semibold text-gray-300">
                 Tu Reseña:
@@ -82,7 +100,6 @@ const FormReview = ({ movie }) => {
               ></textarea>
             </div>
 
-            {/* Valoración */}
             <div>
               <label htmlFor="rating" className="block mb-2 text-sm font-semibold text-gray-300">
                 Valoración:
@@ -103,7 +120,6 @@ const FormReview = ({ movie }) => {
               </select>
             </div>
 
-            {/* Botón */}
             <button
               type="submit"
               className="py-3 px-6 text-white bg-amber-500 rounded-xl text-sm font-semibold hover:bg-amber-600 transition duration-200"
@@ -124,6 +140,29 @@ const FormReview = ({ movie }) => {
           </div>
         )}
       </div>
+
+
+<div className="mt-8 space-y-4">
+  <h3 className="text-xl font-bold text-white">Reseñas de otros usuarios</h3>
+  {movieReviews.length > 0 ? (
+    movieReviews.map((r, index) => (
+      <div key={index} className="bg-gray-800 p-4 rounded-xl shadow-md text-white space-y-2">
+        <p className="text-sm text-amber-400 font-semibold">{r.usuarioNombre}</p>
+        <p className="text-sm">{r.texto}</p>
+        <div className="flex items-center gap-1">
+          {[...Array(r.valoracion)].map((_, i) => (
+            <FaStar key={i} className="text-amber-400" />
+          ))}
+          <span className="ml-2 text-sm text-gray-400">{r.valoracion} / 10</span>
+        </div>
+        <p className="text-xs text-gray-400">Fecha: {r.fecha.split("T")[0]}</p>
+      </div>
+    ))
+  ) : (
+    <p className="text-xl text-center text-gray-200 pt-7">Aún no hay reseñas sobre esta película. Sé el primero en comentarla!!</p>
+  )}
+</div>
+
     </div>
   );
 };

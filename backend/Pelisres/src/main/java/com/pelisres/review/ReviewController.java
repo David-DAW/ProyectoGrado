@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,18 +21,34 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-@PostMapping
-public ResponseEntity<?> createReview(@RequestBody ReviewRequest request, Principal principal) {
-    if (principal == null) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuario no autenticado");
+    @PostMapping
+    public ResponseEntity<?> createReview(@RequestBody ReviewRequest request, Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuario no autenticado");
+        }
+        reviewService.saveReview(request, principal.getName());
+        return ResponseEntity.ok().build();
     }
-    reviewService.saveReview(request, principal.getName());
-    return ResponseEntity.ok().build(); 
-}
 
     @GetMapping
     public ResponseEntity<List<ReviewResponse>> getAllReviews() {
         List<ReviewResponse> reviews = reviewService.getAllReviews();
+        return ResponseEntity.ok(reviews);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getMyReviews(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuario no autenticado");
+        }
+
+        List<ReviewResponse> myReviews = reviewService.getReviewsByUser(principal.getName());
+        return ResponseEntity.ok(myReviews);
+    }
+
+    @GetMapping("/movie/{id}")
+    public ResponseEntity<List<ReviewResponse>> getReviewsByMovie(@PathVariable String id) {
+        List<ReviewResponse> reviews = reviewService.getReviewsByMovie(id);
         return ResponseEntity.ok(reviews);
     }
 

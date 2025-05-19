@@ -17,7 +17,7 @@ const Footer = () => {
         <ul className="mt-12 flex flex-wrap justify-center gap-6 md:gap-8 lg:gap-12">
           <li>
             <a
-              className="text-gray-700 transition hover:text-gray-700/75 dark:text-white dark:hover:text-white/75"
+              className="text-white transition hover:text-gray-200"
               href="#"
             >
               Sobre Nosotros
@@ -26,7 +26,7 @@ const Footer = () => {
 
           <li>
             <a
-              className="text-gray-700 transition hover:text-gray-700/75 dark:text-white dark:hover:text-white/75"
+              className="text-white transition hover:text-gray-200"
               href="#"
             >
               Colaboradores
@@ -35,7 +35,7 @@ const Footer = () => {
 
           <li>
             <a
-              className="text-gray-700 transition hover:text-gray-700/75 dark:text-white dark:hover:text-white/75"
+              className="text-white transition hover:text-gray-200"
               href="#"
             >
               Politica de Privacidad
@@ -44,7 +44,7 @@ const Footer = () => {
 
           <li>
             <a
-              className="text-gray-700 transition hover:text-gray-700/75 dark:text-white dark:hover:text-white/75"
+              className="text-white transition hover:text-gray-200"
               href="#"
             >
               Nuestros Servicios
@@ -53,7 +53,7 @@ const Footer = () => {
 
           <li>
             <a
-              className="text-gray-700 transition hover:text-gray-700/75 dark:text-white dark:hover:text-white/75"
+              className="text-white transition hover:text-gray-200"
               href="#"
             >
               Ayuda
@@ -62,7 +62,7 @@ const Footer = () => {
 
           <li>
             <a
-              className="text-gray-700 transition hover:text-gray-700/75 dark:text-white dark:hover:text-white/75"
+              className="text-white transition hover:text-gray-200"
               href="#"
             >
               Contacto
@@ -76,7 +76,7 @@ const Footer = () => {
               href="#"
               rel="noreferrer"
               target="_blank"
-              className="text-gray-700 transition hover:text-gray-700/75 dark:text-white dark:hover:text-white/75"
+              className="text-white transition hover:text-gray-200"
             >
               <span className="sr-only">Facebook</span>
               <svg
@@ -99,7 +99,7 @@ const Footer = () => {
               href="#"
               rel="noreferrer"
               target="_blank"
-              className="text-gray-700 transition hover:text-gray-700/75 dark:text-white dark:hover:text-white/75"
+              className="text-white transition hover:text-gray-200"
             >
               <span className="sr-only">Instagram</span>
               <svg
@@ -122,7 +122,7 @@ const Footer = () => {
               href="#"
               rel="noreferrer"
               target="_blank"
-              className="text-gray-700 transition hover:text-gray-700/75 dark:text-white dark:hover:text-white/75"
+              className="text-white transition hover:text-gray-200"
             >
               <span className="sr-only">Twitter</span>
               <svg

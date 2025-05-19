@@ -1,6 +1,9 @@
 package com.pelisres.auth.controller;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.Map;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +26,17 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> authenticate(@RequestBody AuthRequest request) {
-        final TokenResponse response = service.authenticate(request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> authenticate(@RequestBody AuthRequest request) {
+        try {
+            final TokenResponse response = service.authenticate(request);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .status(401)
+                    .body(Map.of("message", "Correo o contraseña incorrectos"));
+        }
     }
+
 
     @PostMapping("/refresh-token")
     public TokenResponse refreshToken(

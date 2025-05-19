@@ -26,13 +26,9 @@ const Dropdown = ({ onLogout }) => {
         aria-haspopup="true"
         aria-expanded={open}
         aria-label="Abrir menú de usuario"
-        className="focus:outline-none"
+        className="focus:outline-none cursor-pointer"
       >
-        <img
-          src="/images/iconos/perfil.png"
-          className="h-9 w-9 rounded-full object-cover cursor-pointer hover:scale-105 transition-transform duration-200"
-          alt="Perfil"
-        />
+        <FiUser size={25} />
       </button>
 
       {/* Dropdown menu */}
@@ -48,7 +44,7 @@ const Dropdown = ({ onLogout }) => {
           </li>
           <li>
             <Link
-              href="/mis-resenas"
+              href="/myReviews"
               className="flex items-center gap-2 px-4 py-2 text-sm text-gray-100 hover:bg-gray-700 transition-colors duration-150"
             >
               <FiStar /> Mis Reseñas

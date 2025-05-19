@@ -2,7 +2,6 @@ import mysql from 'mysql2/promise';
 
 let pool;
 
-// Crea el pool de conexiones solo una vez
 export default async function getConnection() {
   if (!pool) {
     pool = mysql.createPool({

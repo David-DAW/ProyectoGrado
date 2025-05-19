@@ -46,15 +46,17 @@ const Header = () => {
             isMenuOpen ? "flex" : "hidden"
           } flex-col gap-4 mt-4 md:mt-0 md:flex md:flex-row md:flex-wrap md:items-center md:ml-auto md:gap-6`}
         >
-          {/* FORMULARIO BUSQUEDA */}
           <FormSearch />
 
           <ul className="flex flex-col md:flex-row md:items-center gap-4 md:gap-0">
+            <Link
+              href="/catalogueMovies"
+              className="hover:font-bold md:mr-12"
+            >
+              Explorar Peliculas
+            </Link>
             <li className="hover:font-bold md:mr-12">
-              <a href="#">Reseñas mejor valoradas</a>
-            </li>
-            <li className="hover:font-bold md:mr-12">
-              <a href="#">Últimas novedades</a>
+              <a href="#">Últimas reseñas</a>
             </li>
             {token ? (
               <Dropdown

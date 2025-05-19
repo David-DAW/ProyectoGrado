@@ -34,3 +34,25 @@ export async function searchMovies(query) {
   const data = await res.json();
   return data.results || [];
 }
+
+export const getGenres = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=es-ES`);
+    return response.data.genres;
+  } catch (error) {
+    console.error("Error al obtener géneros:", error);
+    return [];
+  }
+};
+
+export const getPopularMoviesByGenre = async (genreId) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=es-ES&with_genres=${genreId}`
+    );
+    return response.data.results;
+  } catch (error) {
+    console.error("Error al obtener películas por género:", error);
+    return [];
+  }
+};

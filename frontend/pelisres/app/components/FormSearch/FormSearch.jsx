@@ -23,7 +23,7 @@ const FormSearch = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Busca una película..."
-          className="bg-gray-900 text-gray-100 rounded-lg w-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 transition duration-300"
+          className="bg-white text-amber-800 rounded-lg w-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 transition duration-300"
           aria-label="Buscar película"
         />
         <svg
