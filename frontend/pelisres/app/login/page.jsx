@@ -47,6 +47,7 @@ export default function Login() {
         setLoginError(result.message || "El correo o la contraseña son incorrectos");
       }
     } catch (error) {
+       console.error("Error en login:", error);
       setLoginError("Error de conexión con el servidor");
     } finally {
       setLoading(false);
@@ -121,7 +122,7 @@ export default function Login() {
             </button>
 
             <Link href="/register">
-              <p className="text-sm hover:underline cursor-pointer text-center">
+              <p className="text-sm hover:underline cursor-pointer text-start">
                 ¿No tienes una cuenta todavía? Registrarse
               </p>
             </Link>

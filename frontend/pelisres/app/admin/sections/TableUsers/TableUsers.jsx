@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
-
 const TableUsers = () => {
   const [users, setUsers] = useState([]);
   const [token, setToken] = useState(null);
@@ -13,11 +12,9 @@ const TableUsers = () => {
     console.log(token);
 
     const decodedToken = jwtDecode(token);
-        
-    console.log("Este es el token:", decodedToken)
 
+    console.log("Este es el token:", decodedToken);
 
-    
     if (!token) {
       console.error("Token no encontrado o inválido");
       navigate("/");
@@ -26,9 +23,20 @@ const TableUsers = () => {
     setToken(token);
 
     const fetchUsers = async () => {
-      const res = await fetch("api/users"); 
-      const data = await res.json();
-      setUsers(data); 
+      try {
+        const response = await fetch("http://172.22.229.1:8080/admin/users", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) throw new Error("Error al obtener usuarios");
+
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error("Error obteniendo usuarios:", error);
+      }
     };
 
     fetchUsers();
@@ -37,7 +45,7 @@ const TableUsers = () => {
   const modificarRoleUsuario = async (userId, newRole) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/admin/${userId}/role`,
+        `http://172.22.229.1:8080/admin/role/${userId}`,
         {
           method: "PUT",
           headers: {
@@ -59,20 +67,16 @@ const TableUsers = () => {
 
   const eliminarUsuario = async (userId) => {
     try {
-      const response = await fetch(
-        `http://localhost:8080/admin/${userId}`,
-        {
-          method: "DELETE",
-          mode: "cors",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`http://172.22.229.1:8080/admin/${userId}`, {
+        method: "DELETE",
+        mode: "cors",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!response.ok) throw new Error("Error al eliminar usuario");
 
-      // Actualiza la lista de usuarios sin el eliminado
       setUsers(users.filter((user) => user.id !== userId));
     } catch (error) {
       console.error("Error eliminando usuario:", error);
@@ -81,7 +85,6 @@ const TableUsers = () => {
 
   const roles = ["ADMIN", "USUARIO"];
 
-  // Función para formatear la fecha en formato día-mes-año
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate();
@@ -91,92 +94,55 @@ const TableUsers = () => {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="m-1 overflow-x-auto w-3/4">
-        <div className="p-1 min-w-full inline-block">
-          <div className="overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
-              <thead>
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
+    <div className="p-6 w-3/4 mx-auto">
+      <h2 className="text-2xl font-bold text-white mb-4">Usuarios registrados</h2>
+      <div className="overflow-x-auto rounded shadow">
+        <table className="min-w-full bg-white">
+          <thead className="bg-amber-600 text-white">
+            <tr>
+              <th className="px-4 py-2">Nombre</th>
+              <th className="px-4 py-2">Email</th>
+              <th className="px-4 py-2">Registrado</th>
+              <th className="px-4 py-2">Rol</th>
+              <th className="px-4 py-2">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr
+                key={user.id}
+                className="border-b hover:bg-amber-100 text-gray-800"
+              >
+                <td className="px-4 py-2">{user.name}</td>
+                <td className="px-4 py-2">{user.email}</td>
+                <td className="px-4 py-2">{formatDate(user.registrationDate)}</td>
+                <td className="px-4 py-2 text-center">
+                  <select
+                    value={user.role}
+                    onChange={(e) =>
+                      modificarRoleUsuario(user.id, e.target.value)
+                    }
+                    className="bg-white border border-gray-300 rounded px-2 py-1 text-sm"
                   >
-                    Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
+                    {roles.map((role) => (
+                      <option key={role} value={role}>
+                        {role}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td className="px-4 py-2 text-center">
+                  <button
+                    onClick={() => eliminarUsuario(user.id)}
+                    className="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2 rounded"
                   >
-                    Email
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
-                  >
-                    Registration Date
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
-                  >
-                    Roles
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
-                  >
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr
-                    key={user.id}
-                    className="odd:bg-white even:bg-gray-100 dark:odd:bg-neutral-900 dark:even:bg-neutral-800"
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                      {user.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                      {user.email}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                      {formatDate(user.registration_date)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                      {user.role}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-3">
-                      <button
-                        type="button"
-                        onClick={() => eliminarUsuario(user.id)}
-                        className="bg-white dark:bg-neutral-800 text-sm text-red-600 dark:text-red-400 border border-red-300 dark:border-red-600 rounded px-2 py-1 hover:text-red-800 dark:hover:text-red-300 focus:outline-none"
-                      >
-                        ELIMINAR
-                      </button>
-
-                      <select
-                        value={user.role}
-                        onChange={(e) =>
-                          modificarRoleUsuario(user.id, e.target.value)
-                        }
-                        className="bg-white dark:bg-neutral-800 text-sm text-blue-600 dark:text-blue-400 border border-gray-300 dark:border-neutral-600 rounded px-2 py-1 focus:outline-none"
-                      >
-                        {roles.map((role) => (
-                          <option key={role} value={role}>
-                            {role}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

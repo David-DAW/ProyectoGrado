@@ -4,7 +4,7 @@ import {
   getPopularMovies,
   getGenres,
   getPopularMoviesByGenre,
-} from "../services/api"
+} from "../services/api";
 import MovieCard from "../components/MovieCard/movieCard";
 import Header from "../sections/Header/HeaderComponent";
 import Footer from "../sections/Footer/FooterComponent";
@@ -44,11 +44,31 @@ export default function PopularMoviesPage() {
     <div className="bg-gradient-to-r from-amber-600 to-amber-950 min-h-screen">
       <Header />
 
-      <div className="flex flex-wrap gap-3 justify-center mb-6 w-3/4 mx-auto my-10">
+      <div className="md:hidden px-4 py-4 w-full mx-auto my-10">
+        <select
+          value={selectedGenre || ""}
+          onChange={(e) => handleGenreChange(e.target.value || null)}
+          className="w-full p-3 text-black rounded-xl border-2 border-amber-400
+               bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-amber-500
+               transition duration-300 appearance-none cursor-pointer"
+          aria-label="Seleccionar género"
+        >
+          <option value="">Todos</option>
+          {genres.map((genre) => (
+            <option key={genre.id} value={genre.id}>
+              {genre.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="hidden md:flex flex-wrap gap-3 justify-center mb-6 w-3/4 mx-auto my-10">
         <button
           onClick={() => handleGenreChange(null)}
           className={`px-4 py-2 rounded-full cursor-pointer ${
-            selectedGenre === null ? "bg-white text-black" : "bg-black text-white"
+            selectedGenre === null
+              ? "bg-white text-black"
+              : "bg-black text-white"
           } hover:bg-amber-500 transition`}
         >
           Todos
@@ -58,7 +78,9 @@ export default function PopularMoviesPage() {
             key={genre.id}
             onClick={() => handleGenreChange(genre.id)}
             className={`px-4 py-2 rounded-full cursor-pointer ${
-              selectedGenre === genre.id ? "bg-white text-black" : "bg-black text-white"
+              selectedGenre === genre.id
+                ? "bg-white text-black"
+                : "bg-black text-white"
             } hover:bg-amber-500 transition`}
           >
             {genre.name}
@@ -73,7 +95,9 @@ export default function PopularMoviesPage() {
           {movies.length > 0 ? (
             movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
           ) : (
-            <p className="col-span-full text-center">No hay películas disponibles.</p>
+            <p className="col-span-full text-center">
+              No hay películas disponibles.
+            </p>
           )}
         </div>
       )}

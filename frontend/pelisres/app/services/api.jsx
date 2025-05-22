@@ -29,7 +29,7 @@ export async function getSimilarMovies(id) {
 
 export async function searchMovies(query) {
   const res = await fetch(
-    `${BASE_URL}/search/movie?query=${encodeURIComponent(query)}&api_key=${API_KEY}&language=es-ES`
+    `${BASE_URL}/search/multi?query=${encodeURIComponent(query)}&api_key=${API_KEY}&language=es-ES`
   );
   const data = await res.json();
   return data.results || [];
@@ -53,6 +53,65 @@ export const getPopularMoviesByGenre = async (genreId) => {
     return response.data.results;
   } catch (error) {
     console.error("Error al obtener películas por género:", error);
+    return [];
+  }
+};
+
+export const getPopularTVShows = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/tv/popular?api_key=${API_KEY}&language=es-ES`);
+    return response.data.results;
+  } catch (error) {
+    console.error("Error al obtener series populares:", error);
+    return [];
+  }
+};
+
+// Obtener detalles de una serie por ID
+export const getTVShowDetails = async (id) => {
+  const res = await fetch(`${BASE_URL}/tv/${id}?api_key=${API_KEY}&language=es`);
+  const data = await res.json();
+  return data;
+};
+
+// Obtener series similares (recomendaciones)
+export async function getSimilarTVShows(id) {
+  const res = await fetch(
+    `${BASE_URL}/tv/${id}/recommendations?api_key=${API_KEY}&language=es-ES`
+  );
+  const data = await res.json();
+  return data.results || [];
+}
+
+// Buscar series por texto
+export async function searchTVShows(query) {
+  const res = await fetch(
+    `${BASE_URL}/search/tv?query=${encodeURIComponent(query)}&api_key=${API_KEY}&language=es-ES`
+  );
+  const data = await res.json();
+  return data.results || [];
+}
+
+// Obtener géneros de series
+export const getTVGenres = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/genre/tv/list?api_key=${API_KEY}&language=es-ES`);
+    return response.data.genres;
+  } catch (error) {
+    console.error("Error al obtener géneros de series:", error);
+    return [];
+  }
+};
+
+// Obtener series populares por género
+export const getPopularTVShowsByGenre = async (genreId) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/discover/tv?api_key=${API_KEY}&language=es-ES&with_genres=${genreId}`
+    );
+    return response.data.results;
+  } catch (error) {
+    console.error("Error al obtener series por género:", error);
     return [];
   }
 };

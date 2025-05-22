@@ -1,14 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import logo from "../../../../public/images/prueba4.png";
-import Dropdown from "../../../sections/components/Dropdown/DropdownComponent";
+import Dropdown from "../../../components/Dropdown/DropdownComponent";
 import { jwtDecode } from "jwt-decode";
+
 
 const Header = () => {
   const [token, setToken] = useState(null);
   const [username, setUsername] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
@@ -29,7 +31,6 @@ const Header = () => {
     }
   }, []); 
 
-  
 
   return (
     <div className="flex w-screen flex-col">
@@ -53,17 +54,14 @@ const Header = () => {
           className="flex w-full flex-col items-center justify-between md:ml-24 md:flex-row md:items-start"
         >
           <ul className="flex flex-col items-center space-y-2 space-x-8 md:ml-auto md:flex-row md:space-y-0">
-            <li>
-              <p>Bienvenido de nuevo {username ? username : "Invitado"}</p>
-            </li>
-
             <Dropdown
-              onLogout={() => {
-                localStorage.removeItem("token");
-                setToken(null);
-                setUsername(null); 
-              }}
-            />
+                onLogout={() => {
+                  localStorage.removeItem("token");
+                  setToken(null);
+                 router.push("/login");
+                }}
+              />
+
           </ul>
         </nav>
       </header>

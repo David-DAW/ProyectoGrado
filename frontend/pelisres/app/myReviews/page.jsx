@@ -13,7 +13,7 @@ export default function MisResenas() {
   const [error, setError] = useState(null);
 
 
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (!token) {
@@ -67,7 +67,7 @@ export default function MisResenas() {
 
               <div className="flex-1 pr-6 text-gray-200">
                 <h2 className="text-xl font-semibold mb-2">{review.tituloPelicula}</h2>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 whitespace-nowrap">
                   {[...Array(review.valoracion)].map((_, i) => (
                     <FaStar key={i} className="text-amber-400" />
                   ))}
@@ -94,7 +94,7 @@ export default function MisResenas() {
                 <img
                   src={`https://image.tmdb.org/t/p/w200${review.imagenUrlPelicula}`}
                   alt={review.tituloPelicula}
-                  className="w-28 h-auto object-cover rounded-md shadow-md"
+                  className="w-28 h-auto object-cover rounded-md shadow-md hidden md:block"
                 />
               )}
             </li>

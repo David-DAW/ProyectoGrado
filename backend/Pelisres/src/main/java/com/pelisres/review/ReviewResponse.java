@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class ReviewResponse {
+    private Integer id;
     private String usuarioNombre;
     private String texto;
     private int valoracion;
@@ -13,6 +14,7 @@ public class ReviewResponse {
 
 
     public ReviewResponse(Review review) {
+    this.id = review.getId();
     this.usuarioNombre = review.getUser().getName();
     this.texto = review.getTexto();
     this.valoracion = review.getValoracion();

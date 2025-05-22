@@ -5,7 +5,7 @@ import logo from "../../../public/images/prueba4.png";
 const Footer = () => {
   return (
     <footer className="bg-gray-900">
-      <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="flex justify-center text-amber-600 dark:text-amber-600">
           <Image src={logo} alt="Logo de la aplicación" height={100}  />
         </div>
@@ -14,7 +14,7 @@ const Footer = () => {
         Comparte tus peliculas favoritas, encuentra reseñas únicas y escribe sobre tus nuevos descubrimientos del mundo cinematográfico.
         </p>
 
-        <ul className="mt-12 flex flex-wrap justify-center gap-6 md:gap-8 lg:gap-12">
+        <ul className="mt-8 flex flex-wrap justify-center gap-6 md:gap-8 lg:gap-12">
           <li>
             <a
               className="text-white transition hover:text-gray-200"
@@ -70,7 +70,7 @@ const Footer = () => {
           </li>
         </ul>
 
-        <ul className="mt-12 flex justify-center gap-6 md:gap-8">
+        <ul className="mt-5 flex justify-center gap-6 md:gap-8">
           <li>
             <a
               href="#"

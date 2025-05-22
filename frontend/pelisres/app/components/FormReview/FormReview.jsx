@@ -3,11 +3,12 @@
 import { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
 
-const FormReview = ({ movie }) => {
+const FormReview = ({ media }) => {
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [movieReviews, setMovieReviews] = useState([]);
+  const [submittedReview, setSubmittedReview] = useState(null);
 
   const etiquetas = [
     "Horrible", "Muy mala", "Mala", "Regular", "Aceptable",
@@ -25,10 +26,10 @@ const FormReview = ({ movie }) => {
     const reviewData = {
       texto: reviewText,
       valoracion: rating,
-      id_pelicula: movie.id,
-      imagen_url: movie.poster_path,
-      descripcion_pelicula: movie.overview,
-      titulo: movie.title,
+      id_pelicula: media.id,
+      imagen_url: media.poster_path,
+      descripcion_pelicula: media.overview,
+      titulo: media.title || media.name,
     };
 
     try {
@@ -42,6 +43,7 @@ const FormReview = ({ movie }) => {
       });
 
       if (res.ok) {
+        setSubmittedReview({ texto: reviewText, valoracion: rating });
         setSubmitted(true);
         setReviewText("");
         setRating(0);
@@ -56,31 +58,34 @@ const FormReview = ({ movie }) => {
   };
 
   const fetchMovieReviews = async () => {
-    try {
-      const res = await fetch(`http://172.22.229.1:8080/reviews/movie/${movie.id}`);
-      if (!res.ok) throw new Error("No se pudieron cargar las reseñas");
-      const data = await res.json();
-      console.log("Reseñas recibidas:", data);
-      setMovieReviews(data);
-    } catch (error) {
-      console.error("Error al obtener reseñas de la película:", error);
+  try {
+    const res = await fetch(`http://172.22.229.1:8080/reviews/movie/${media.id}`);
+    
+    if (res.status === 404) {
+      setMovieReviews([]);
+      return;
     }
-  };
 
-  useEffect(() => {
-    if (movie?.id) fetchMovieReviews();
-  }, [movie?.id]);
+    if (!res.ok) throw new Error("No se pudieron cargar las reseñas");
+
+    const data = await res.json();
+    setMovieReviews(Array.isArray(data) ? data : []);
+  } catch (error) {
+    console.error("Error al obtener reseñas de la película:", error);
+    setMovieReviews([]);
+  }
+};
 
   return (
     <div className="w-full mt-6 lg:pl-9">
       <div className="p-6 bg-gray-900 rounded-2xl shadow-xl space-y-6">
         <div className="flex items-center space-x-4">
           <img
-            src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-            alt={movie.title}
+            src={`https://image.tmdb.org/t/p/w200${media.poster_path}`}
+            alt={media.title || media.name}
             className="w-24 h-auto rounded-lg shadow-md"
           />
-          <h2 className="text-2xl font-semibold text-white">{movie.title}</h2>
+          <h2 className="text-2xl font-semibold text-white">{media.title}</h2>
         </div>
 
         {!submitted ? (
@@ -130,39 +135,39 @@ const FormReview = ({ movie }) => {
         ) : (
           <div className="text-white space-y-4">
             <h3 className="text-xl font-bold text-amber-400">¡Gracias por tu reseña!</h3>
-            <p className="text-sm text-gray-300 whitespace-pre-line">{reviewText}</p>
+            <p className="text-sm text-gray-300 whitespace-pre-line">
+              {submittedReview?.texto}
+            </p>
             <div className="flex items-center gap-1">
-              {[...Array(rating)].map((_, i) => (
+              {[...Array(submittedReview?.valoracion || 0)].map((_, i) => (
                 <FaStar key={i} className="text-amber-400" />
               ))}
-              <span className="ml-2 text-sm text-gray-400">{rating} / 10</span>
+              <span className="ml-2 text-sm text-gray-400">{submittedReview?.valoracion} / 10</span>
             </div>
           </div>
         )}
       </div>
 
-
-<div className="mt-8 space-y-4">
-  <h3 className="text-xl font-bold text-white">Reseñas de otros usuarios</h3>
-  {movieReviews.length > 0 ? (
-    movieReviews.map((r, index) => (
-      <div key={index} className="bg-gray-800 p-4 rounded-xl shadow-md text-white space-y-2">
-        <p className="text-sm text-amber-400 font-semibold">{r.usuarioNombre}</p>
-        <p className="text-sm">{r.texto}</p>
-        <div className="flex items-center gap-1">
-          {[...Array(r.valoracion)].map((_, i) => (
-            <FaStar key={i} className="text-amber-400" />
-          ))}
-          <span className="ml-2 text-sm text-gray-400">{r.valoracion} / 10</span>
-        </div>
-        <p className="text-xs text-gray-400">Fecha: {r.fecha.split("T")[0]}</p>
+      <div className="mt-8 space-y-4">
+        <h3 className="text-xl font-bold text-white">Reseñas de otros usuarios</h3>
+        {movieReviews.length > 0 ? (
+          movieReviews.map((review, index) => (
+            <div key={index} className="bg-gray-800 p-4 rounded-xl shadow-md text-white space-y-2">
+              <p className="text-sm text-amber-400 font-semibold">{review.usuarioNombre}</p>
+              <p className="text-sm">{review.texto}</p>
+              <div className="flex items-center gap-1">
+                {[...Array(review.valoracion)].map((_, i) => (
+                  <FaStar key={i} className="text-amber-400" />
+                ))}
+                <span className="ml-2 text-sm text-gray-400">{review.valoracion} / 10</span>
+              </div>
+              <p className="text-xs text-gray-400">Fecha: {review.fecha.split("T")[0]}</p>
+            </div>
+          ))
+        ) : (
+          <p className="text-xl text-center text-gray-200 pt-7">Aún no hay reseñas sobre esta película. ¡Sé el primero en comentarla!</p>
+        )}
       </div>
-    ))
-  ) : (
-    <p className="text-xl text-center text-gray-200 pt-7">Aún no hay reseñas sobre esta película. Sé el primero en comentarla!!</p>
-  )}
-</div>
-
     </div>
   );
 };
