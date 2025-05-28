@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const FormSearch = () => {
@@ -15,9 +15,9 @@ const FormSearch = () => {
   return (
     <form
       onSubmit={handleSearch}
-      className="flex items-center w-full md:w-auto space-x-3"
+      className="flex items-center w-full md:w-auto space-x-3 md:ml-4"
     >
-      <div className="relative w-full md:w-60">
+      <div className="relative w-full md:w-200">
         <input
           type="text"
           value={search}

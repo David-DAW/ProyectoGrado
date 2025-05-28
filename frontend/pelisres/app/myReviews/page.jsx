@@ -6,21 +6,54 @@ import Footer from "../sections/Footer/FooterComponent";
 import { FaStar } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
 
-
 export default function MisResenas() {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [token, setToken] = useState(null);
 
+  const [showModal, setShowModal] = useState(false);
+  const [selectedReviewId, setSelectedReviewId] = useState(null);
 
-  const token = localStorage.getItem("token");
+  const openDeleteModal = (id) => {
+    setSelectedReviewId(id);
+    setShowModal(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      const res = await fetch(`http://172.22.229.1:8080/reviews/${selectedReviewId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        const errorMsg = await res.text();
+        throw new Error(errorMsg || "Error al eliminar reseña");
+      }
+
+      setReviews((prev) => prev.filter((review) => review.id !== selectedReviewId));
+      setShowModal(false);
+      setSelectedReviewId(null);
+    } catch (err) {
+      alert("Error al eliminar la reseña: " + err.message);
+    }
+  };
 
   useEffect(() => {
-    if (!token) {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+    } else {
       setError("No autenticado");
       setLoading(false);
-      return;
     }
+  }, []);
+
+  useEffect(() => {
+    if (!token) return;
 
     fetch("http://172.22.229.1:8080/reviews/me", {
       headers: {
@@ -52,7 +85,6 @@ export default function MisResenas() {
     );
   }
 
-
   return (
     <div className="bg-gradient-to-l from-amber-950 to-amber-600 min-h-screen flex flex-col">
       <Header />
@@ -64,31 +96,33 @@ export default function MisResenas() {
               key={review.id}
               className="flex items-start justify-between border border-gray-400 rounded-lg p-6 mb-6 bg-gray-900 shadow-sm"
             >
-
               <div className="flex-1 pr-6 text-gray-200">
-                <h2 className="text-xl font-semibold mb-2">{review.tituloPelicula}</h2>
+                <h2 className="text-xl font-semibold mb-2">
+                  {review.tituloPelicula}
+                </h2>
                 <div className="flex items-center gap-1 whitespace-nowrap">
                   {[...Array(review.valoracion)].map((_, i) => (
                     <FaStar key={i} className="text-amber-400" />
                   ))}
-                  <span className="ml-2 text-sm text-gray-400">{review.valoracion} / 10</span>
+                  <span className="ml-2 text-sm text-gray-400">
+                    {review.valoracion} / 10
+                  </span>
                 </div>
                 <p className="mb-16 mt-3">{review.texto}</p>
                 <div className="flex flex-col items-start mt-2 space-y-2">
                   <small className="ml-1">
-                    Fecha de publicación: {new Date(review.fecha).toLocaleDateString()}
+                    Fecha de publicación:{" "}
+                    {new Date(review.fecha).toLocaleDateString()}
                   </small>
 
                   <button
-                    // onClick={() => handleDelete(review.id)}
+                    onClick={() => openDeleteModal(review.id)}
                     className="bg-red-600 hover:bg-red-700 text-white text-sm font-bold py-1 px-4 rounded-full"
                   >
-                  <FaRegTrashCan size={20}/>
+                    <FaRegTrashCan size={20} />
                   </button>
                 </div>
-
               </div>
-
 
               {review.imagenUrlPelicula && (
                 <img
@@ -101,6 +135,32 @@ export default function MisResenas() {
           ))}
         </ul>
       </div>
+
+      {showModal && (
+  <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+    <div className="relative bg-white p-6 rounded-xl shadow-lg max-w-md w-full pointer-events-auto border border-gray-300">
+      <h2 className="text-xl font-semibold mb-4 text-gray-800">
+        ¿Eliminar reseña?
+      </h2>
+      <p className="text-gray-600 mb-6">Esta acción no se puede deshacer.</p>
+      <div className="flex justify-end gap-3">
+        <button
+          onClick={() => setShowModal(false)}
+          className="px-4 py-2 rounded-md bg-gray-300 hover:bg-gray-400 text-gray-800"
+        >
+          Cancelar
+        </button>
+        <button
+          onClick={confirmDelete}
+          className="px-4 py-2 rounded-md bg-red-600 hover:bg-red-700 text-white font-semibold"
+        >
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
       <Footer />
     </div>
   );

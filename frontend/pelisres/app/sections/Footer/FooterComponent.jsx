@@ -137,6 +137,11 @@ const Footer = () => {
           </li>
         </ul>
       </div>
+      <div className="py-2">
+        <p className="text-center text-sm text-gray-400">
+          © {new Date().getFullYear()} PelisRes. Todos los derechos reservados.
+        </p>
+      </div>
     </footer>
   );
 };

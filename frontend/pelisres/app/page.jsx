@@ -7,6 +7,7 @@ import Reviews from "./sections/Reviews/ReviewComponent";
 import News from "./sections/News/newsComponent";
 import Hero from "./sections/Hero/Hero";
 import Alert from "./components/Alerts/Alert"; 
+import Faq from "./sections/Faq/FaqComponents";
 
 export default function Home() {
   const [alertMessage, setAlertMessage] = useState(null);
@@ -37,6 +38,7 @@ export default function Home() {
       <Movies />
       <Reviews />
       <News />
+      <Faq />
       <Footer />
     </div>
   );

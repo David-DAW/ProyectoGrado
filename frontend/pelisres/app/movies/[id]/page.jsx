@@ -10,10 +10,38 @@ export default async function MoviePage({ params }) {
   const movie = await getMovieDetails(id);
   const similarMovies = await getSimilarMovies(id);
 
-  const reviewsResponse = await fetch(`http://172.22.229.1:8080/reviews?movieId=${id}`);
+  const reviewsResponse = await fetch(
+    `http://172.22.229.1:8080/reviews?movieId=${id}`
+  );
   const reviews = await reviewsResponse.json();
 
-  console.log("similarMovies:", similarMovies);
+  const averageRatingResponse = await fetch(
+    `http://172.22.229.1:8080/reviews/movie/${id}/average-rating`
+  );
+
+  let averageRatingData = null;
+  if (averageRatingResponse.ok) {
+    const text = await averageRatingResponse.text();
+    try {
+      averageRatingData = text ? JSON.parse(text) : null;
+    } catch (error) {
+      console.warn(
+        "No se pudo parsear la respuesta JSON de average-rating:",
+        error
+      );
+      averageRatingData = null;
+    }
+  } else {
+    console.warn(
+      "Error al obtener average-rating:",
+      averageRatingResponse.status
+    );
+  }
+
+  const averageRating =
+    averageRatingData !== null ? Number(averageRatingData).toFixed(1) : "N/A";
+
+  // console.log("similarMovies:", similarMovies);
 
   const year = new Date(movie.release_date).getFullYear();
   const country = movie.production_countries?.[0]?.name || "Desconocido";
@@ -56,18 +84,20 @@ export default async function MoviePage({ params }) {
                   <span className="font-semibold">Sinopsis:</span>
                 </p>
 
-                <p className="leading-relaxed text-justify text-md">{movie.overview}</p>
+                <p className="leading-relaxed text-justify text-md">
+                  {movie.overview}
+                </p>
 
-                <p className="text-2xl text-gray-400 mb-3 mt-6">
-                  <span className="font-semibold">⭐</span> {voteAverage}
+                <p className="text-2xl text-gray-400 mb-3 mt-6 flex gap-1">
+                  <span className="font-semibold">⭐ </span > {voteAverage}
+                  <span className="font-semibold ml-5">⭐ Usuarios de PelisRes:</span>{" "}
+                  {averageRating}
                 </p>
               </div>
             </div>
           </div>
 
           <FormReview media={movie} />
-
-          {/* <MovieReviews reviews={reviews} /> */}
 
         </div>
       </div>

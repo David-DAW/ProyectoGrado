@@ -15,8 +15,7 @@ export default function TVShowCard({ tvShow }) {
         <img
           src={imageUrl}
           alt={tvShow.name}
-          className="rounded mb-2 w-full object-cover
-                     h-[250px] sm:h-[300px] md:h-[380px]"
+          className="rounded mb-2 w-full object-contain h-[250px] sm:h-[300px] md:h-[380px] bg-black p-2"
         />
         <h3 className="text-lg font-semibold text-white truncate">{tvShow.name}</h3>
         <p className="text-gray-400">⭐ {tvShow.vote_average === 0 ? "N/A" : tvShow.vote_average?.toFixed(1)}</p>

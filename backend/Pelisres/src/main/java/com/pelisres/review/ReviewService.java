@@ -10,8 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.Optional;
-
 
 @Service
 @RequiredArgsConstructor
@@ -37,17 +35,16 @@ public class ReviewService {
     }
 
     public List<ReviewResponse> getReviewsByMovie(String idPelicula) {
-        Movie movie = movieRepository.findByIdPelicula(idPelicula)
-                .orElseThrow(() -> new RuntimeException("Película no encontrada"));
-
-        return reviewRepository.findByMovie(movie).stream()
-                .map(ReviewResponse::new)
-                .collect(Collectors.toList());
+        return movieRepository.findByIdPelicula(idPelicula)
+                .map(movie -> reviewRepository.findByMovie(movie).stream()
+                        .map(ReviewResponse::new)
+                        .collect(Collectors.toList()))
+                .orElseGet(() -> List.of());
     }
 
     public ReviewResponse getReviewById(Integer id) {
         Review review = reviewRepository.findById(id)
-            .orElse(null);
+                .orElse(null);
         return review != null ? new ReviewResponse(review) : null;
     }
 
@@ -79,17 +76,29 @@ public class ReviewService {
 
     }
 
-    public void deleteReview(Integer id) {
-        if (!reviewRepository.existsById(id)) {
-            throw new RuntimeException("La reseña no existe");
+    public void deleteReview(Integer reviewId, String requesterEmail) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("Reseña no encontrada"));
+
+        User requester = userRepository.findByEmail(requesterEmail)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        boolean isOwner = review.getUser().getEmail().equals(requesterEmail);
+        boolean isAdmin = requester.getRole().name().equals("ADMIN");
+
+        if (!isOwner && !isAdmin) {
+            throw new RuntimeException("No tienes permiso para eliminar esta reseña");
         }
-        reviewRepository.deleteById(id);
+
+        reviewRepository.delete(review);
     }
 
-    // public boolean isUserAdmin(String email) {
-    // User user = userRepository.findByEmail(email)
-    // .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-    // return user.getRoles().contains("ADMIN");
-    // }
+    public Double getAverageRatingByMovie(String idPelicula) {
+        Movie movie = movieRepository.findByIdPelicula(idPelicula)
+                .orElseThrow(() -> new RuntimeException("Película no encontrada"));
+
+        return reviewRepository.findAverageRatingByMovie(movie)
+                .orElse(null);
+    }
 
 }

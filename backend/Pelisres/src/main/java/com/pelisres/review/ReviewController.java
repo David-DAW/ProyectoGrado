@@ -59,8 +59,12 @@ public class ReviewController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuario no autenticado");
         }
 
-        reviewService.deleteReview(id);
-        return ResponseEntity.ok().build();
+        try {
+            reviewService.deleteReview(id, principal.getName());
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
@@ -70,6 +74,15 @@ public class ReviewController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(review);
+    }
+
+    @GetMapping("/movie/{id}/average-rating")
+    public ResponseEntity<Double> getAverageRating(@PathVariable String id) {
+        Double averageRating = reviewService.getAverageRatingByMovie(id);
+        if (averageRating == null) {
+            return ResponseEntity.ok(0.0);
+        }
+        return ResponseEntity.ok(averageRating);
     }
 
 }

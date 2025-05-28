@@ -1,7 +1,7 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "../../public/images/prueba4.png";
@@ -15,9 +15,12 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
   const [loginError, setLoginError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/"; 
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -39,15 +42,14 @@ export default function Login() {
         localStorage.setItem("token", result.access_token);
         const decoded = jwtDecode(result.access_token);
         const username = decoded.name;
-        // console.log("Usuario decodificado:", username);
 
         localStorage.setItem("loginSuccessMessage", `👋🏻 Bienvenido de vuelta, ${username}!`);
-        router.push("/");
+        router.push(redirect);
       } else {
         setLoginError(result.message || "El correo o la contraseña son incorrectos");
       }
     } catch (error) {
-       console.error("Error en login:", error);
+      console.error("Error en login:", error);
       setLoginError("Error de conexión con el servidor");
     } finally {
       setLoading(false);
@@ -121,10 +123,8 @@ export default function Login() {
               Iniciar Sesión
             </button>
 
-            <Link href="/register">
-              <p className="text-sm hover:underline cursor-pointer text-start">
+            <Link href="/register" className="text-sm hover:underline cursor-pointer text-start">
                 ¿No tienes una cuenta todavía? Registrarse
-              </p>
             </Link>
           </form>
         </div>

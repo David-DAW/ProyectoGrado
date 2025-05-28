@@ -34,13 +34,13 @@ const ReviewDetail = () => {
     <div className="flex flex-col min-h-screen bg-gradient-to-r from-amber-600 to-amber-950">
       <Header />
 
-      <main className="flex-1">
+      <main className="flex-1 mb-8">
         <section className="w-3/4 mx-auto mt-10 p-6 bg-gray-900 rounded-2xl shadow-md">
           <div className="flex flex-col md:flex-row items-center gap-6">
             <img
               src={`https://image.tmdb.org/t/p/w500${review.imagenUrlPelicula}`}
               alt={review.tituloPelicula}
-              className="w-40 h-60 object-cover rounded-lg shadow"
+              className="w-30 h-50 object-cover rounded-lg shadow"
             />
             <div className="flex-1">
               <h1 className="text-4xl font-bold text-gray-100 mb-2">

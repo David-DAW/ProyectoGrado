@@ -47,6 +47,14 @@ const Header = () => {
     if (isMenuOpen) setIsMenuOpen(false);
   };
 
+  // ✅ Nuevo: Controla el click en el logo en mobile
+  const handleLogoClick = (e) => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      e.preventDefault();
+      setIsMenuOpen(!isMenuOpen);
+    }
+  };
+
   return (
     <div className="flex w-screen flex-col">
       <header className="relative w-full px-4 py-4 text-white md:mx-auto md:w-3/4 flex items-center justify-between z-50">
@@ -54,6 +62,7 @@ const Header = () => {
           <Link
             href="/"
             className="flex items-center whitespace-nowrap text-2xl font-black"
+            onClick={handleLogoClick} 
           >
             <Image
               src={logo}
@@ -65,12 +74,13 @@ const Header = () => {
           </Link>
 
           <button
-            className="md:hidden text-white  z-40 relative -top-6"
+            className="md:hidden text-white z-40 relative -top-6"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
-            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
+
+          <FormSearch />
         </div>
 
         <nav
@@ -85,8 +95,6 @@ const Header = () => {
             }
           `}
         >
-          <FormSearch />
-
           <ul className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 md:ml-4">
             <li>
               <Link

@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
+import { usePathname } from "next/navigation";
+
 
 const FormReview = ({ media }) => {
   const [reviewText, setReviewText] = useState("");
@@ -9,6 +11,9 @@ const FormReview = ({ media }) => {
   const [submitted, setSubmitted] = useState(false);
   const [movieReviews, setMovieReviews] = useState([]);
   const [submittedReview, setSubmittedReview] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const pathname = usePathname();
 
   const etiquetas = [
     "Horrible", "Muy mala", "Mala", "Regular", "Aceptable",
@@ -58,23 +63,21 @@ const FormReview = ({ media }) => {
   };
 
   const fetchMovieReviews = async () => {
-  try {
-    const res = await fetch(`http://172.22.229.1:8080/reviews/movie/${media.id}`);
-    
-    if (res.status === 404) {
-      setMovieReviews([]);
-      return;
+    try {
+      const res = await fetch(`http://172.22.229.1:8080/reviews/movie/${media.id}`);
+      if (!res.ok) throw new Error("No se pudieron cargar las reseñas");
+      const data = await res.json();
+      setMovieReviews(data);
+    } catch (error) {
+      console.error("Error al obtener reseñas de la película:", error);
     }
+  };
 
-    if (!res.ok) throw new Error("No se pudieron cargar las reseñas");
-
-    const data = await res.json();
-    setMovieReviews(Array.isArray(data) ? data : []);
-  } catch (error) {
-    console.error("Error al obtener reseñas de la película:", error);
-    setMovieReviews([]);
-  }
-};
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsAuthenticated(!!token);
+    if (media?.id) fetchMovieReviews();
+  }, [media?.id]);
 
   return (
     <div className="w-full mt-6 lg:pl-9">
@@ -88,62 +91,76 @@ const FormReview = ({ media }) => {
           <h2 className="text-2xl font-semibold text-white">{media.title}</h2>
         </div>
 
-        {!submitted ? (
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="review" className="block mb-2 text-sm font-semibold text-gray-300">
-                Tu Reseña:
-              </label>
-              <textarea
-                id="review"
-                rows="5"
-                value={reviewText}
-                onChange={handleReviewChange}
-                className="w-full p-4 text-sm text-white bg-gray-800 placeholder-gray-400 rounded-xl border border-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"
-                placeholder="Escribe tu reseña..."
-                required
-              ></textarea>
-            </div>
+        {isAuthenticated ? (
+          !submitted ? (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="review" className="block mb-2 text-sm font-semibold text-gray-300">
+                  Tu Reseña:
+                </label>
+                <textarea
+                  id="review"
+                  rows="5"
+                  value={reviewText}
+                  onChange={handleReviewChange}
+                  className="w-full p-4 text-sm text-white bg-gray-800 placeholder-gray-400 rounded-xl border border-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"
+                  placeholder="Escribe tu reseña..."
+                  required
+                ></textarea>
+              </div>
 
-            <div>
-              <label htmlFor="rating" className="block mb-2 text-sm font-semibold text-gray-300">
-                Valoración:
-              </label>
-              <select
-                id="rating"
-                value={rating}
-                onChange={handleRatingChange}
-                className="w-full p-3 text-sm text-white bg-gray-800 rounded-xl border border-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                required
+              <div>
+                <label htmlFor="rating" className="block mb-2 text-sm font-semibold text-gray-300">
+                  Valoración:
+                </label>
+                <select
+                  id="rating"
+                  value={rating}
+                  onChange={handleRatingChange}
+                  className="w-full p-3 text-sm text-white bg-gray-800 rounded-xl border border-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  required
+                >
+                  <option value={0} disabled>Selecciona una opción</option>
+                  {etiquetas.map((etiqueta, i) => (
+                    <option key={i + 1} value={i + 1}>
+                      {i + 1} - {etiqueta}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                className="py-3 px-6 text-white bg-amber-500 rounded-xl text-sm font-semibold hover:bg-amber-600 transition duration-200"
               >
-                <option value={0} disabled>Selecciona una opción</option>
-                {etiquetas.map((etiqueta, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    {i + 1} - {etiqueta}
-                  </option>
+                Publicar Reseña
+              </button>
+            </form>
+          ) : (
+            <div className="text-white space-y-4">
+              <h3 className="text-xl font-bold text-amber-400">¡Gracias por tu reseña!</h3>
+              <p className="text-sm text-gray-300 whitespace-pre-line">
+                {submittedReview?.texto}
+              </p>
+              <div className="flex items-center gap-1">
+                {[...Array(submittedReview?.valoracion || 0)].map((_, i) => (
+                  <FaStar key={i} className="text-amber-400" />
                 ))}
-              </select>
+                <span className="ml-2 text-sm text-gray-400">{submittedReview?.valoracion} / 10</span>
+              </div>
             </div>
-
-            <button
-              type="submit"
-              className="py-3 px-6 text-white bg-amber-500 rounded-xl text-sm font-semibold hover:bg-amber-600 transition duration-200"
-            >
-              Publicar Reseña
-            </button>
-          </form>
+          )
         ) : (
-          <div className="text-white space-y-4">
-            <h3 className="text-xl font-bold text-amber-400">¡Gracias por tu reseña!</h3>
-            <p className="text-sm text-gray-300 whitespace-pre-line">
-              {submittedReview?.texto}
+          <div className="text-center space-y-4 text-white">
+            <p className="text-lg font-medium text-gray-300">
+              ¿Quieres dejar tu opinión? Inicia sesión para publicar una reseña.
             </p>
-            <div className="flex items-center gap-1">
-              {[...Array(submittedReview?.valoracion || 0)].map((_, i) => (
-                <FaStar key={i} className="text-amber-400" />
-              ))}
-              <span className="ml-2 text-sm text-gray-400">{submittedReview?.valoracion} / 10</span>
-            </div>
+            <a
+              href={`/login?redirect=${encodeURIComponent(pathname)}`}
+              className="inline-block px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl transition"
+            >
+              Iniciar sesión
+            </a>
           </div>
         )}
       </div>
