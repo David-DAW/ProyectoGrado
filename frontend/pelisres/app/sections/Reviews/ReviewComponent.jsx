@@ -14,8 +14,8 @@ const Reviews = () => {
           const data = await response.json();
           setReviews(
             data
-              .sort((a, b) => new Date(b.fecha) - new Date(a.fecha)) 
-              .slice(0, 9) 
+              .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+              .slice(0, 9)
           );
         } else {
           console.error("Error al cargar reseñas");
@@ -27,51 +27,51 @@ const Reviews = () => {
 
     fetchReviews();
   }, []);
-  // console.log(reviews);
 
   return (
-    <section className="w-full py-12 px-4 flex flex-col items-center">
-      <h2 className="text-3xl sm:text-4xl font-bold text-gray-200 mb-10 text-center">
+    <section
+      id="reviews"
+      className="w-full py-10 px-4 sm:px-6 flex flex-col items-center"
+    >
+      <h2 className="text-2xl sm:text-4xl font-bold text-gray-200 mb-8 text-center">
         Últimas reseñas
       </h2>
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 w-full max-w-7xl">
+      <div className="grid gap-6 sm:gap-8 w-full max-w-6xl grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {reviews.map((review) => (
           <div
             key={review.id}
-            className="rounded bg-white shadow-lg flex flex-col"
+            className="rounded-xl bg-white shadow-md overflow-hidden transition-transform hover:scale-[1.01]"
           >
             <Link
               href={`/reviews/${review.id}`}
-              className="block rounded-md border border-gray-300 p-4 shadow-sm sm:p-6 flex-1"
+              className="block p-4 sm:p-6 space-y-4"
             >
-              <div className="sm:flex sm:justify-between sm:gap-4 lg:gap-6">
-                <div className="sm:order-last sm:shrink-0">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                <div className="flex-shrink-0 mx-auto sm:mx-0 mb-4 sm:mb-0">
                   <img
                     alt={review.authorName}
                     src={`https://image.tmdb.org/t/p/w500${review.imagenUrlPelicula}`}
-                    className="h-[100px] w-[75px] object-cover rounded-md"
+                    className="h-[140px] w-[100px] object-cover rounded-md"
                   />
                 </div>
 
-                <div className="mt-4 sm:mt-0">
-                  <h3 className="text-lg font-medium text-pretty text-gray-900">
+                <div className="flex-1 text-center sm:text-left">
+                  <h3 className="text-lg font-semibold text-gray-900">
                     {review.tituloPelicula}
                   </h3>
-                  <p className="mt-1 text-sm text-gray-700">
+                  <p className="text-sm text-gray-600 mt-1">
                     @{review.usuarioNombre}
                   </p>
-                  <p className="mt-4 line-clamp-2 text-sm text-pretty text-gray-700">
+                  <p className="mt-2 text-sm text-gray-700 line-clamp-3">
                     {review.texto}
                   </p>
                 </div>
               </div>
 
-              <dl className="mt-6 flex gap-4 lg:gap-6">
-                <div className="flex items-center gap-2 text-gray-700 text-xl">
-                  ⭐ {review.valoracion || "0"}
-                </div>
-              </dl>
+              <div className="pt-2 border-t border-gray-200 text-gray-700 text-center sm:text-left">
+                ⭐ {review.valoracion || "0"}
+              </div>
             </Link>
           </div>
         ))}

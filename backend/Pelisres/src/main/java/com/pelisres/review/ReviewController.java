@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -83,6 +84,22 @@ public class ReviewController {
             return ResponseEntity.ok(0.0);
         }
         return ResponseEntity.ok(averageRating);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateReview(@PathVariable Integer id, @RequestBody ReviewUpdateRequest request,
+            Principal principal) {
+
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuario no autenticado");
+        }
+
+        try {
+            reviewService.updateReview(id, request, principal.getName());
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
     }
 
 }

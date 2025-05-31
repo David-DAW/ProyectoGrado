@@ -2,10 +2,13 @@ package com.pelisres.auth.service;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.pelisres.auth.controller.AuthRequest;
 import com.pelisres.auth.controller.RegisterRequest;
@@ -29,6 +32,14 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public TokenResponse register(final RegisterRequest request) {
+
+       if (repository.findByEmail(request.email()).isPresent()) {
+        throw new ResponseStatusException(
+            HttpStatus.CONFLICT, 
+            "El correo ya está registrado"
+        );
+    }
+
         final User user = User.builder()
                 .name(request.name())
                 .email(request.email())

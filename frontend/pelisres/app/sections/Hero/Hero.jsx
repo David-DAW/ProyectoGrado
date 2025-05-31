@@ -23,7 +23,7 @@ const Hero = () => {
           <div className="flex flex-col items-center md:flex-row">
             <Link
               href="/catalogueMovies"
-              className="mb-3 inline-flex h-12 w-full items-center justify-center rounded bg-yellow-500 px-6 font-medium tracking-wide text-white shadow-md transition duration-200 hover:bg-amber-500 focus:outline-none md:mr-4 md:mb-0 md:w-auto"
+              className="mb-3 inline-flex h-12 w-full items-center justify-center rounded bg-amber-500 px-6 font-medium tracking-wide text-white shadow-md transition duration-200 hover:bg-amber-500 focus:outline-none md:mr-4 md:mb-0 md:w-auto"
             >
               Explora todo un mundo cinematográfico!!
             </Link>

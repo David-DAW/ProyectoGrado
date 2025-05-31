@@ -15,90 +15,103 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReviewService {
 
-    private final ReviewRepository reviewRepository;
-    private final UserRepository userRepository;
-    private final MovieRepository movieRepository;
+        private final ReviewRepository reviewRepository;
+        private final UserRepository userRepository;
+        private final MovieRepository movieRepository;
 
-    public List<ReviewResponse> getAllReviews() {
-        return reviewRepository.findAll().stream()
-                .map(ReviewResponse::new)
-                .collect(Collectors.toList());
-    }
-
-    public List<ReviewResponse> getReviewsByUser(String userEmail) {
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        return reviewRepository.findByUser(user).stream()
-                .map(ReviewResponse::new)
-                .collect(Collectors.toList());
-    }
-
-    public List<ReviewResponse> getReviewsByMovie(String idPelicula) {
-        return movieRepository.findByIdPelicula(idPelicula)
-                .map(movie -> reviewRepository.findByMovie(movie).stream()
-                        .map(ReviewResponse::new)
-                        .collect(Collectors.toList()))
-                .orElseGet(() -> List.of());
-    }
-
-    public ReviewResponse getReviewById(Integer id) {
-        Review review = reviewRepository.findById(id)
-                .orElse(null);
-        return review != null ? new ReviewResponse(review) : null;
-    }
-
-    @Transactional
-    public void saveReview(ReviewRequest request, String userEmail) {
-
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        Movie movie = movieRepository.findByIdPelicula(request.getId_pelicula())
-                .orElseGet(() -> {
-                    Movie newMovie = new Movie();
-                    newMovie.setIdPelicula(request.getId_pelicula());
-                    newMovie.setTitulo(request.getTitulo());
-                    newMovie.setImagenUrl(request.getImagen_url());
-                    newMovie.setDescripcion(request.getDescripcion_pelicula());
-                    return movieRepository.save(newMovie);
-                });
-
-        Review review = Review.builder()
-                .texto(request.getTexto())
-                .valoracion(request.getValoracion())
-                .fecha_creacion(LocalDateTime.now())
-                .user(user)
-                .movie(movie)
-                .build();
-
-        reviewRepository.save(review);
-
-    }
-
-    public void deleteReview(Integer reviewId, String requesterEmail) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new RuntimeException("Reseña no encontrada"));
-
-        User requester = userRepository.findByEmail(requesterEmail)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        boolean isOwner = review.getUser().getEmail().equals(requesterEmail);
-        boolean isAdmin = requester.getRole().name().equals("ADMIN");
-
-        if (!isOwner && !isAdmin) {
-            throw new RuntimeException("No tienes permiso para eliminar esta reseña");
+        public List<ReviewResponse> getAllReviews() {
+                return reviewRepository.findAll().stream()
+                                .map(ReviewResponse::new)
+                                .collect(Collectors.toList());
         }
 
-        reviewRepository.delete(review);
-    }
+        public List<ReviewResponse> getReviewsByUser(String userEmail) {
+                User user = userRepository.findByEmail(userEmail)
+                                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-    public Double getAverageRatingByMovie(String idPelicula) {
-        Movie movie = movieRepository.findByIdPelicula(idPelicula)
-                .orElseThrow(() -> new RuntimeException("Película no encontrada"));
+                return reviewRepository.findByUser(user).stream()
+                                .map(ReviewResponse::new)
+                                .collect(Collectors.toList());
+        }
 
-        return reviewRepository.findAverageRatingByMovie(movie)
-                .orElse(null);
-    }
+        public List<ReviewResponse> getReviewsByMovie(String idPelicula) {
+                return movieRepository.findByIdPelicula(idPelicula)
+                                .map(movie -> reviewRepository.findByMovie(movie).stream()
+                                                .map(ReviewResponse::new)
+                                                .collect(Collectors.toList()))
+                                .orElseGet(() -> List.of());
+        }
+
+        public ReviewResponse getReviewById(Integer id) {
+                Review review = reviewRepository.findById(id)
+                                .orElse(null);
+                return review != null ? new ReviewResponse(review) : null;
+        }
+
+        @Transactional
+        public void saveReview(ReviewRequest request, String userEmail) {
+
+                User user = userRepository.findByEmail(userEmail)
+                                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+                Movie movie = movieRepository.findByIdPelicula(request.getId_pelicula())
+                                .orElseGet(() -> {
+                                        Movie newMovie = new Movie();
+                                        newMovie.setIdPelicula(request.getId_pelicula());
+                                        newMovie.setTitulo(request.getTitulo());
+                                        newMovie.setImagenUrl(request.getImagen_url());
+                                        newMovie.setDescripcion(request.getDescripcion_pelicula());
+                                        return movieRepository.save(newMovie);
+                                });
+
+                Review review = Review.builder()
+                                .texto(request.getTexto())
+                                .valoracion(request.getValoracion())
+                                .fecha_creacion(LocalDateTime.now())
+                                .user(user)
+                                .movie(movie)
+                                .build();
+
+                reviewRepository.save(review);
+
+        }
+
+        public void deleteReview(Integer reviewId, String requesterEmail) {
+                Review review = reviewRepository.findById(reviewId)
+                                .orElseThrow(() -> new RuntimeException("Reseña no encontrada"));
+
+                User requester = userRepository.findByEmail(requesterEmail)
+                                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+                boolean isOwner = review.getUser().getEmail().equals(requesterEmail);
+                boolean isAdmin = requester.getRole().name().equals("ADMIN");
+
+                if (!isOwner && !isAdmin) {
+                        throw new RuntimeException("No tienes permiso para eliminar esta reseña");
+                }
+
+                reviewRepository.delete(review);
+        }
+
+        public Double getAverageRatingByMovie(String idPelicula) {
+                Movie movie = movieRepository.findByIdPelicula(idPelicula)
+                                .orElseThrow(() -> new RuntimeException("Película no encontrada"));
+
+                return reviewRepository.findAverageRatingByMovie(movie)
+                                .orElse(null);
+        }
+
+        public void updateReview(Integer id, ReviewUpdateRequest request, String username) {
+                Review review = reviewRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Reseña no encontrada"));
+
+                if (!review.getUser().getUsername().equals(username)) {
+                        throw new RuntimeException("No tienes permiso para editar esta reseña");
+                }
+
+                review.setTexto(request.getTexto());
+                review.setValoracion(request.getValoracion());
+                reviewRepository.save(review);
+        }
 
 }

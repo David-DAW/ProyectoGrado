@@ -107,7 +107,7 @@ const Header = () => {
             </li>
             <li className="hover:font-bold">
               <Link
-                href="#"
+                href="#reviews"
                 className="hover:font-bold"
                 onClick={handleLinkClick}
               >

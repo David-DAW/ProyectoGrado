@@ -53,6 +53,7 @@ const FormReview = ({ media }) => {
         setReviewText("");
         setRating(0);
         fetchMovieReviews();
+        // window.location.reload();
       } else {
         alert("Error al publicar la reseña.");
       }

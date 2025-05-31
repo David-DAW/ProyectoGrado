@@ -60,9 +60,12 @@ const TableUsers = () => {
 
       const updatedUser = await response.json();
       setUsers(users.map((user) => (user.id === userId ? updatedUser : user)));
+
+      window.location.reload();
     } catch (error) {
       console.error("Error modificando rol:", error);
     }
+
   };
 
   const eliminarUsuario = async (userId) => {
