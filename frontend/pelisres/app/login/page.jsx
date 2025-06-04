@@ -27,7 +27,7 @@ export default function Login() {
     setLoginError("");
 
     try {
-      const response = await fetch("http://172.22.229.1:8080/auth/login", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

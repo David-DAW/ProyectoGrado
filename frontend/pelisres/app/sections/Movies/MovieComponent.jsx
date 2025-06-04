@@ -16,7 +16,7 @@ const Movies = () => {
       setMovies(popularMovies.slice(0, 8));
       setTvShows(popularTV.slice(0, 8));
 
-      console.log("POPULAR TV RAW DATA:", popularTV);
+      // console.log("POPULAR TV RAW DATA:", popularTV);
 
     };
 

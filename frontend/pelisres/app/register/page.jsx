@@ -22,7 +22,7 @@ export default function Register() {
   setServerError(""); 
 
   try {
-    const response = await fetch("http://172.22.229.1:8080/auth/register", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

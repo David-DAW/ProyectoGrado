@@ -9,7 +9,7 @@ const Reviews = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch("http://172.22.229.1:8080/reviews");
+        const response = await fetch("http://172.22.233.163:8080/reviews");
         if (response.ok) {
           const data = await response.json();
           setReviews(

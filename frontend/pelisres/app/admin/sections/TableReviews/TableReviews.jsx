@@ -8,7 +8,7 @@ const TableReviews = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch("http://172.22.229.1:8080/reviews", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -35,7 +35,7 @@ const TableReviews = () => {
 
     try {
       const response = await fetch(
-        `http://172.22.229.1:8080/reviews/${reviewId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews/${reviewId}`,
         {
           method: "DELETE",
           headers: {

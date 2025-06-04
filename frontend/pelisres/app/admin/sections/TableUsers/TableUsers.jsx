@@ -24,7 +24,7 @@ const TableUsers = () => {
 
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://172.22.229.1:8080/admin/users", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/users`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -42,10 +42,10 @@ const TableUsers = () => {
     fetchUsers();
   }, []);
 
-  const modificarRoleUsuario = async (userId, newRole) => {
+  const modifyRoleUser = async (userId, newRole) => {
     try {
       const response = await fetch(
-        `http://172.22.229.1:8080/admin/role/${userId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/role/${userId}`,
         {
           method: "PUT",
           headers: {
@@ -68,9 +68,10 @@ const TableUsers = () => {
 
   };
 
-  const eliminarUsuario = async (userId) => {
+  const handleDelete = async (userId) => {
+    if (!confirm("¿Estás seguro de que deseas eliminar este usuario?")) return;
     try {
-      const response = await fetch(`http://172.22.229.1:8080/admin/${userId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/${userId}`, {
         method: "DELETE",
         mode: "cors",
         headers: {
@@ -123,7 +124,7 @@ const TableUsers = () => {
                   <select
                     value={user.role}
                     onChange={(e) =>
-                      modificarRoleUsuario(user.id, e.target.value)
+                      modifyRoleUser(user.id, e.target.value)
                     }
                     className="bg-white border border-gray-300 rounded px-2 py-1 text-sm"
                   >
@@ -136,7 +137,7 @@ const TableUsers = () => {
                 </td>
                 <td className="px-4 py-2 text-center">
                   <button
-                    onClick={() => eliminarUsuario(user.id)}
+                    onClick={() => handleDelete(user.id)}
                     className="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2 rounded"
                   >
                     Eliminar

@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "../../../public/images/prueba4.png";
 import Dropdown from "../../components/Dropdown/DropdownComponent";
-import { Menu, X } from "lucide-react";
 import FormSearch from "../../components/FormSearch/FormSearch";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";

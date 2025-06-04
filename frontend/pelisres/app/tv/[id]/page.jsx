@@ -11,7 +11,7 @@ export default async function TVShowPage({ params }) {
   const similarShows = await getSimilarTVShows(id);
 
   const reviewsResponse = await fetch(
-    `http://172.22.229.1:8080/reviews?movieId=${id}`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews?movieId=${id}`
   );
   const reviews = await reviewsResponse.json();
 

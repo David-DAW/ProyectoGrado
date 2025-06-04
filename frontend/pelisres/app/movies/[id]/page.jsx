@@ -11,12 +11,12 @@ export default async function MoviePage({ params }) {
   const similarMovies = await getSimilarMovies(id);
 
   const reviewsResponse = await fetch(
-    `http://172.22.229.1:8080/reviews?movieId=${id}`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews?movieId=${id}`
   );
   const reviews = await reviewsResponse.json();
 
   const averageRatingResponse = await fetch(
-    `http://172.22.229.1:8080/reviews/movie/${id}/average-rating`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews/movie/${id}/average-rating`
   );
 
   let averageRatingData = null;

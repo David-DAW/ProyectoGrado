@@ -14,7 +14,7 @@ const ReviewDetail = () => {
   useEffect(() => {
     const fetchReview = async () => {
       try {
-        const res = await fetch(`http://172.22.229.1:8080/reviews/${id}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews/${id}`);
         if (res.ok) {
           const data = await res.json();
           setReview(data);

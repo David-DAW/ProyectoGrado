@@ -37,7 +37,7 @@ export default function MisResenas() {
   const confirmDelete = async () => {
     try {
       const res = await fetch(
-        `http://172.22.229.1:8080/reviews/${selectedReviewId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews/${selectedReviewId}`,
         {
           method: "DELETE",
           headers: {
@@ -64,7 +64,7 @@ export default function MisResenas() {
   const handleEditSubmit = async () => {
     try {
       const res = await fetch(
-        `http://172.22.229.1:8080/reviews/${editReview.id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews/${editReview.id}`,
         {
           method: "PUT",
           headers: {
@@ -111,7 +111,7 @@ export default function MisResenas() {
   useEffect(() => {
     if (!token) return;
 
-    fetch("http://172.22.229.1:8080/reviews/me", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -16,8 +16,7 @@ const Hero = () => {
               favoritas
             </h2>
             <p className="text-base text-gray-200">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-              accusantium doloremque it.
+               Comparte tus peliculas favoritas, encuentra reseñas únicas y escribe sobre tus nuevos descubrimientos del mundo cinematográfico.
             </p>
           </div>
           <div className="flex flex-col items-center md:flex-row">

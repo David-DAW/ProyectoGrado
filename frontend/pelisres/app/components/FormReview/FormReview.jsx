@@ -38,7 +38,7 @@ const FormReview = ({ media }) => {
     };
 
     try {
-      const res = await fetch("http://172.22.229.1:8080/reviews", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +65,7 @@ const FormReview = ({ media }) => {
 
   const fetchMovieReviews = async () => {
     try {
-      const res = await fetch(`http://172.22.229.1:8080/reviews/movie/${media.id}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews/movie/${media.id}`);
       if (!res.ok) throw new Error("No se pudieron cargar las reseñas");
       const data = await res.json();
       setMovieReviews(data);
