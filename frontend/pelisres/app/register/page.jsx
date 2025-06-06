@@ -18,7 +18,7 @@ export default function Register() {
   const router = useRouter();
 
   const onSubmit = async (data) => {
-  console.log("Formulario enviado", data);
+  // console.log("Formulario enviado", data);
   setServerError(""); 
 
   try {
@@ -31,7 +31,7 @@ export default function Register() {
     });
 
     const text = await response.text();
-    console.log("Respuesta cruda del servidor:", text);
+    // console.log("Respuesta cruda del servidor:", text);
 
     let responseData;
     try {
@@ -40,13 +40,13 @@ export default function Register() {
       responseData = { message: "Respuesta del servidor no es JSON válido" };
     }
 
-    console.log("Respuesta parseada:", responseData);
+    // console.log("Respuesta:", responseData);
 
     if (response.ok) {
       localStorage.setItem("token", responseData.access_token);
       localStorage.setItem(
         "registerSuccessMessage",
-        "¡Registro exitoso! 👋🏻 Bienvenido, " + data.name + "."
+        "¡Registro exitoso! 👋🏻 Bienvenido, " + data.name + "!!"
       );
       router.push("/");
     } else {

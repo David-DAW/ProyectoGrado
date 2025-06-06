@@ -2,11 +2,7 @@
 import Link from "next/link";
 
 export default function TVShowCard({ tvShow }) {
-  const imageUrl = tvShow.poster_path
-    ? `https://image.tmdb.org/t/p/w500${tvShow.poster_path}`
-    : "/no-image.jpg";
-
-  //   console.log("TVShowCard", tvShow);
+  const imageUrl = `https://image.tmdb.org/t/p/w500${tvShow.poster_path}`;
 
   return (
     <div className="rounded overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300 bg-gray-900 sm:pt-5">

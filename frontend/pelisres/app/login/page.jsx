@@ -1,7 +1,7 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter} from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "../../public/images/prueba4.png";
@@ -19,8 +19,7 @@ export default function Login() {
   const [loginError, setLoginError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/"; 
+ 
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -43,8 +42,16 @@ export default function Login() {
         const decoded = jwtDecode(result.access_token);
         const username = decoded.name;
 
+        // console.log(decoded);
+
         localStorage.setItem("loginSuccessMessage", `👋🏻 Bienvenido de vuelta, ${username}!`);
-        router.push(redirect);
+        
+        if (decoded.role === "ADMIN") {
+          router.push("/admin")
+        } else {
+          router.push("/");
+        }
+
       } else {
         setLoginError(result.message || "El correo o la contraseña son incorrectos");
       }

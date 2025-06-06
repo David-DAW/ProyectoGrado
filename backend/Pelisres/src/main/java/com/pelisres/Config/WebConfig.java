@@ -1,4 +1,4 @@
-package com.pelisres.Config;
+/*package com.pelisres.Config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -11,3 +11,4 @@ public class WebConfig implements WebMvcConfigurer {
         //     registry.addMapping("/**").allowedOrigins("http://172.22.229.1:3000");
         // }
 }
+        */

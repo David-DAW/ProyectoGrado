@@ -14,7 +14,6 @@ import com.pelisres.auth.service.AuthService;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://172.22.229.1:3000")
 
 public class AuthController {
 

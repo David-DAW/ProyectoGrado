@@ -46,7 +46,6 @@ const Header = () => {
     if (isMenuOpen) setIsMenuOpen(false);
   };
 
-  // ✅ Nuevo: Controla el click en el logo en mobile
   const handleLogoClick = (e) => {
     if (typeof window !== "undefined" && window.innerWidth < 768) {
       e.preventDefault();
@@ -101,7 +100,7 @@ const Header = () => {
                 className="hover:font-bold"
                 onClick={handleLinkClick}
               >
-                Explorar Peliculas
+                Explorar
               </Link>
             </li>
             <li className="hover:font-bold">

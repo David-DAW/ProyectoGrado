@@ -67,14 +67,12 @@ export const getPopularTVShows = async () => {
   }
 };
 
-// Obtener detalles de una serie por ID
 export const getTVShowDetails = async (id) => {
   const res = await fetch(`${BASE_URL}/tv/${id}?api_key=${API_KEY}&language=es`);
   const data = await res.json();
   return data;
 };
 
-// Obtener series similares (recomendaciones)
 export async function getSimilarTVShows(id) {
   const res = await fetch(
     `${BASE_URL}/tv/${id}/recommendations?api_key=${API_KEY}&language=es-ES`
@@ -83,7 +81,6 @@ export async function getSimilarTVShows(id) {
   return data.results || [];
 }
 
-// Buscar series por texto
 export async function searchTVShows(query) {
   const res = await fetch(
     `${BASE_URL}/search/tv?query=${encodeURIComponent(query)}&api_key=${API_KEY}&language=es-ES`
@@ -92,7 +89,6 @@ export async function searchTVShows(query) {
   return data.results || [];
 }
 
-// Obtener géneros de series
 export const getTVGenres = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/genre/tv/list?api_key=${API_KEY}&language=es-ES`);
@@ -103,7 +99,6 @@ export const getTVGenres = async () => {
   }
 };
 
-// Obtener series populares por género
 export const getPopularTVShowsByGenre = async (genreId) => {
   try {
     const response = await axios.get(

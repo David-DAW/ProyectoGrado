@@ -5,6 +5,7 @@ import Image from "next/image";
 import logo from "../../../../public/images/prueba4.png";
 import Dropdown from "../../../components/Dropdown/DropdownComponent";
 import { jwtDecode } from "jwt-decode";
+import Link from "next/link";
 
 
 const Header = () => {
@@ -15,39 +16,37 @@ const Header = () => {
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
 
-    setToken(savedToken); 
+    setToken(savedToken);
 
 
     if (savedToken) {
-      
+
       try {
         const decodedToken = jwtDecode(savedToken);
-        setUsername(decodedToken.name); 
-        console.log("Este es el rol:" + decodedToken.role)
+        setUsername(decodedToken.name);
+        // console.log("Este es el rol:" + decodedToken.role)
 
       } catch (error) {
         console.error("Error decodificando el token:", error);
       }
     }
-  }, []); 
+  }, []);
 
 
   return (
     <div className="flex w-screen flex-col">
       <header className="relative flex w-3/4 max-w-screen flex-col overflow-visible px-4 py-4 text-white md:mx-auto md:flex-row md:items-center">
-        <a
-          href="#"
-          className="flex cursor-pointer items-center whitespace-nowrap text-2xl font-black"
-        >
-          <span className=" text-4xl text-amber-400">
+
+        <span className=" text-4xl text-amber-400">
+          <Link href="/">
             <Image
               src={logo}
               alt="Logo de la aplicación"
               width={150}
               height={150}
             />
-          </span>
-        </a>
+          </Link>
+        </span>
 
         <nav
           aria-label="Header Navigation"
@@ -55,12 +54,12 @@ const Header = () => {
         >
           <ul className="flex flex-col items-center space-y-2 space-x-8 md:ml-auto md:flex-row md:space-y-0">
             <Dropdown
-                onLogout={() => {
-                  localStorage.removeItem("token");
-                  setToken(null);
-                 router.push("/login");
-                }}
-              />
+              onLogout={() => {
+                localStorage.removeItem("token");
+                setToken(null);
+                router.push("/login");
+              }}
+            />
 
           </ul>
         </nav>

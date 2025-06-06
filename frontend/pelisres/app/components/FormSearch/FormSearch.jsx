@@ -17,7 +17,7 @@ const FormSearch = () => {
       onSubmit={handleSearch}
       className="flex items-center w-full  md:w-auto space-x-3 md:ml-4"
     >
-      <div className="relative w-full sm:w-50 md:w-96 lg:w-220">
+      <div className="relative w-full sm:w-50 md:w-60 lg:w-150">
         <input
           type="text"
           value={search}

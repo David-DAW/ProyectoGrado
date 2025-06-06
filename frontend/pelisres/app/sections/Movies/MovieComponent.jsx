@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { getPopularMovies, getPopularTVShows } from "../../services/api";
 import MovieCard from "../../components/MovieCard/movieCard";
-import TVShowCard from "@/app/components/tvshowCard/tvshowCard";
+import TVShowCard from "../../components/tvshowCard/tvshowCard";
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
