@@ -26,7 +26,7 @@ const FormReview = ({ media }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const token = localStorage.getItem("token");
-    if (!token) return alert("Usuario no autenticado.");
+    // if (!token) return alert("Usuario no autenticado.");
 
     const reviewData = {
       texto: reviewText,

@@ -19,6 +19,34 @@ export default async function TVShowPage({ params }) {
   const country = tvShow.origin_country?.[0] || "Desconocido";
   const voteAverage = tvShow.vote_average.toFixed(1);
 
+
+  const averageRatingResponse = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews/movie/${id}/average-rating`
+  );
+
+  let averageRatingData = null;
+  if (averageRatingResponse.ok) {
+    const text = await averageRatingResponse.text();
+    try {
+      averageRatingData = text ? JSON.parse(text) : null;
+    } catch (error) {
+      console.warn(
+        "No se pudo parsear la respuesta JSON de average-rating:",
+        error
+      );
+      averageRatingData = null;
+    }
+  } else {
+    console.warn(
+      "Error al obtener average-rating:",
+      averageRatingResponse.status
+    );
+  }
+
+  const averageRating =
+    averageRatingData !== null ? Number(averageRatingData).toFixed(1) : "N/A";
+
+
   return (
     <div className="bg-gradient-to-l from-amber-950 to-amber-600 min-h-screen">
       <Header />
@@ -64,6 +92,8 @@ export default async function TVShowPage({ params }) {
 
                 <p className="text-2xl text-gray-400 mb-3 mt-6">
                   <span className="font-semibold">⭐</span> {voteAverage}
+                  <span className="font-semibold ml-5">⭐ Usuarios de PelisRes:</span>{" "}
+                  {averageRating}
                 </p>
               </div>
             </div>

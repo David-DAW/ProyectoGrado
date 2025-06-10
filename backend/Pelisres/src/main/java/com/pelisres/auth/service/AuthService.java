@@ -33,12 +33,19 @@ public class AuthService {
 
     public TokenResponse register(final RegisterRequest request) {
 
-       if (repository.findByEmail(request.email()).isPresent()) {
-        throw new ResponseStatusException(
-            HttpStatus.CONFLICT, 
-            "El correo ya está registrado"
-        );
-    }
+        if (repository.findByEmail(request.email()).isPresent()) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "El correo ya está registrado");
+        }
+
+        if (request.name() == null || request.name().length() < 3) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre debe tener al menos 3 caracteres");
+        }
+
+        if (request.password() == null || request.password().length() < 7) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe tener al menos 7 caracteres");
+        }
 
         final User user = User.builder()
                 .name(request.name())
@@ -60,9 +67,7 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.email(),
-                        request.password()
-                )
-        );
+                        request.password()));
         final User user = repository.findByEmail(request.email())
                 .orElseThrow();
         final String accessToken = jwtService.generateToken(user);

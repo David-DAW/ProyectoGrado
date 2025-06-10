@@ -38,7 +38,7 @@ const Dropdown = ({ onLogout }) => {
         <ul className="absolute right-0 mt-2 w-52 bg-black bg-opacity-70 rounded-xl shadow-lg ring-1 ring-black/10 z-50 animate-fade-in">
           <li>
             <Link
-              href="/perfil"
+              href="/#"
               className="flex items-center gap-2 px-4 py-2 text-sm text-gray-100 hover:bg-amber-700 rounded-t-xl transition-colors duration-150"
             >
               <FiUser /> Mi Perfil
